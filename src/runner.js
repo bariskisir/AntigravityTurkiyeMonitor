@@ -19,6 +19,7 @@ import * as eksisozlukModule from './modules/eksisozluk.js';
 import * as earthquakesModule from './modules/earthquakes.js';
 import * as youtubeTrendsModule from './modules/youtubeTrends.js';
 import * as weatherModule from './modules/weather.js';
+import * as magnificent7stocksModule from './modules/magnificent7stocks.js';
 
 const MODULES = [
     { key: 'exchangeRates', loader: exchangeRatesModule, section: 'exchangeRates' },
@@ -32,7 +33,8 @@ const MODULES = [
     { key: 'eksisozluk', loader: eksisozlukModule, section: 'eksisozluk' },
     { key: 'earthquakes', loader: earthquakesModule, section: 'earthquakes' },
     { key: 'youtubeTrends', loader: youtubeTrendsModule, section: 'youtubeTrends' },
-    { key: 'weather', loader: weatherModule, section: 'weather' }
+    { key: 'weather', loader: weatherModule, section: 'weather' },
+    { key: 'magnificent7stocks', loader: magnificent7stocksModule, section: 'magnificent7stocks' }
 ];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

@@ -18,7 +18,8 @@ const TRANSLATIONS = {
       eksisozluk: '💬 Ekşi Sözlük Gündem',
       earthquakes: '🌍 Son Depremler (4+)',
       youtubeTrends: '🎥 YouTube Trendleri',
-      weather: '🌦️ Hava Durumu'
+      weather: '🌦️ Hava Durumu',
+      magnificent7stocks: '🏆 Muhteşem 7\'li'
     },
     noData: 'Veri bulunamadı',
     columns: {
@@ -52,6 +53,8 @@ const TRANSLATIONS = {
     tuikUnemployment: 'İşsizlik Oranı (%)',
     tuikCpiLabel: 'TÜFE',
     tuikUnemploymentLabel: 'İşsizlik',
+    tuikGdpLabel: 'GSYH Büyüme',
+    tuikConsumerConfidenceLabel: 'Tük. Güven',
     months: {
       1: 'Ocak', 2: 'Şubat', 3: 'Mart', 4: 'Nisan',
       5: 'Mayıs', 6: 'Haziran', 7: 'Temmuz', 8: 'Ağustos',
@@ -88,7 +91,8 @@ const TRANSLATIONS = {
       eksisozluk: '💬 Ekşi Sözlük Agenda',
       earthquakes: '🌍 Recent Earthquakes (4+)',
       youtubeTrends: '🎥 YouTube Trends',
-      weather: '🌦️ Weather'
+      weather: '🌦️ Weather',
+      magnificent7stocks: '🏆 Magnificent 7'
     },
     noData: 'No data found',
     columns: {
@@ -122,6 +126,8 @@ const TRANSLATIONS = {
     tuikUnemployment: 'Unemployment Rate (%)',
     tuikCpiLabel: 'CPI',
     tuikUnemploymentLabel: 'Unemployment',
+    tuikGdpLabel: 'GDP Growth',
+    tuikConsumerConfidenceLabel: 'Cons. Conf.',
     months: {
       1: 'January', 2: 'February', 3: 'March', 4: 'April',
       5: 'May', 6: 'June', 7: 'July', 8: 'August',

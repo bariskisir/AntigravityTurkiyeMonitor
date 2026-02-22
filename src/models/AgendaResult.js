@@ -12,6 +12,7 @@ export default class AgendaResult {
         this.earthquakes = data.earthquakes || null;
         this.youtubeTrends = data.youtubeTrends || null;
         this.weather = data.weather || null;
+        this.magnificent7stocks = data.magnificent7stocks || null;
         this.timestamp = data.timestamp || new Date().toISOString();
     }
 
@@ -29,6 +30,7 @@ export default class AgendaResult {
             earthquakes: this.earthquakes,
             youtubeTrends: this.youtubeTrends,
             weather: this.weather,
+            magnificent7stocks: this.magnificent7stocks,
             timestamp: this.timestamp
         };
     }

@@ -40,7 +40,9 @@ export async function scrape(url, evaluateFn, waitSelector = null) {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     try {
-        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+        const separator = url.includes('?') ? '&' : '?';
+        const cacheBustUrl = `${url}${separator}timestamp=${Date.now()}`;
+        await page.goto(cacheBustUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
         if (waitSelector) {
             await page.waitForSelector(waitSelector, { timeout: 15000 });

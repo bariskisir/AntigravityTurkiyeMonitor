@@ -33,5 +33,5 @@ export async function fetch() {
         throw new Error('No crypto data found');
     }
 
-    return crypto;
+    return crypto.filter(c => c.name !== 'USDT' && c.name !== 'BNB');
 }

@@ -10,4 +10,10 @@ const client = axios.create({
     }
 });
 
+client.interceptors.request.use((config) => {
+    const separator = config.url.includes('?') ? '&' : '?';
+    config.url = `${config.url}${separator}timestamp=${Date.now()}`;
+    return config;
+});
+
 export default client;

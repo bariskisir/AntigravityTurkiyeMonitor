@@ -1,6 +1,6 @@
 {
   "name": "antigravityturkiyemonitor",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A powerful CLI tool to monitor Turkiye agenda in real-time.",
   "main": "src/index.js",
   "type": "module",

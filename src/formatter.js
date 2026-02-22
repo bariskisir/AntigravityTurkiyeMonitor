@@ -3,8 +3,10 @@ import { getTranslations } from './i18n.js';
 
 export function formatOutput(result, lang) {
     const t = getTranslations(lang);
-    const W = Math.floor((process.stdout.columns || 150) * 0.99);
-    const COL_W = Math.floor((W - 4) / 3);
+    const W = Math.floor((process.stdout.columns || 150) * 0.98);
+    const COL1_W = Math.floor((W - 4) * 0.25);
+    const COL2_W = Math.floor((W - 4) * 0.45);
+    const COL3_W = Math.floor((W - 4) * 0.30);
     const lines = [];
 
     const header = ` ${t.appTitle} | ${new Date().toLocaleString(lang === 'tr' ? 'tr-TR' : 'en-US')} `;
@@ -17,31 +19,34 @@ export function formatOutput(result, lang) {
 
     buildExchangeRates(col1, result.exchangeRates, t);
     buildStocks(col1, result.stocks, t);
+    buildMagnificent7(col1, result.magnificent7stocks, t);
     buildCrypto(col1, result.crypto, t);
     buildFuelPrices(col1, result.fuelPrices, t);
-    buildTuikStats(col1, result.tuikStats, t);
 
-    buildEconomicNews(col2, result.economicNews, t, COL_W);
-    buildPolitics(col2, result.politics, t, COL_W);
-    buildTwitterTrends(col2, result.twitterTrends, t, COL_W);
+    buildEconomicNews(col2, result.economicNews, t, COL2_W);
+    buildPolitics(col2, result.politics, t, COL2_W);
+    buildTuikStats(col2, result.tuikStats, t);
+    buildEarthquakes(col2, result.earthquakes, t);
 
+    buildTwitterTrends(col3, result.twitterTrends, t, COL3_W);
     buildEksiSozluk(col3, result.eksisozluk, t);
     buildYoutubeTrends(col3, result.youtubeTrends, t);
     buildWeather(col3, result.weather, t);
-    buildEarthquakes(col3, result.earthquakes, t);
 
     const maxLen = Math.max(col1.length, col2.length, col3.length);
     const sep = chalk.gray(' ║ ');
 
     for (let i = 0; i < maxLen; i++) {
-        const asciiPad = chalk.dim.gray(' ' + '· '.repeat(Math.floor((COL_W - 2) / 2)));
-        const c1Str = col1[i] !== undefined ? col1[i] : asciiPad;
-        const c2Str = col2[i] !== undefined ? col2[i] : asciiPad;
-        const c3Str = col3[i] !== undefined ? col3[i] : asciiPad;
+        const pad1 = chalk.dim.gray(' ' + '· '.repeat(Math.floor((COL1_W - 2) / 2)));
+        const pad2 = chalk.dim.gray(' ' + '· '.repeat(Math.floor((COL2_W - 2) / 2)));
+        const pad3 = chalk.dim.gray(' ' + '· '.repeat(Math.floor((COL3_W - 2) / 2)));
+        const c1Str = col1[i] !== undefined ? col1[i] : pad1;
+        const c2Str = col2[i] !== undefined ? col2[i] : pad2;
+        const c3Str = col3[i] !== undefined ? col3[i] : pad3;
 
-        const c1 = stripAndPad(c1Str, COL_W);
-        const c2 = stripAndPad(c2Str, COL_W);
-        const c3 = stripAndPad(c3Str, COL_W);
+        const c1 = stripAndPad(c1Str, COL1_W);
+        const c2 = stripAndPad(c2Str, COL2_W);
+        const c3 = stripAndPad(c3Str, COL3_W);
         lines.push(`${c1}${sep}${c2}${sep}${c3}`);
     }
 
@@ -119,7 +124,7 @@ function colorizeValue(text) {
     const num = parseFloat(clean);
     if (isNaN(num)) return text;
     if (num > 0) return chalk.green(text.replace(/[()]/g, ''));
-    if (num < 0) return chalk.red(text);
+    if (num < 0) return chalk.red(text.replace(/[()]/g, ''));
     return chalk.gray(text);
 }
 
@@ -143,8 +148,8 @@ function buildStocks(col, data, t) {
     col.push(sectionHeader(t.sections.stocks));
     if (!data) { col.push(errorMessage(t)); return; }
     for (const s of data) {
-        const name = truncate(s.name, 17).padEnd(18);
-        const last = (s.last || '-').padEnd(12);
+        const name = truncate(s.name, 11).padEnd(12);
+        const last = (s.last || '-').padEnd(10);
         col.push(chalk.dim(` ${name}${last}${colorizeValue(s.changePercent)}`));
     }
 }
@@ -153,8 +158,8 @@ function buildCrypto(col, data, t) {
     col.push(sectionHeader(t.sections.crypto));
     if (!data) { col.push(errorMessage(t)); return; }
     for (const c of data) {
-        const name = truncate(c.name, 16).padEnd(17);
-        const price = c.price.padEnd(13);
+        const name = truncate(c.name, 5).padEnd(6);
+        const price = c.price.padEnd(10);
         col.push(chalk.dim(` ${name}${price}${colorizeValue(c.changePercent)}`));
     }
 }
@@ -163,7 +168,8 @@ function buildFuelPrices(col, data, t) {
     col.push(sectionHeader(t.sections.fuelPrices));
     if (!data) { col.push(errorMessage(t)); return; }
     for (const f of data) {
-        col.push(chalk.dim(` ${f.productName.padEnd(22)} ${f.amount} ₺`));
+        const name = f.productName.split(' ').slice(1).join(' ');
+        col.push(chalk.dim(` ${name.padEnd(16)} ${f.amount} ₺`));
     }
 }
 
@@ -178,12 +184,20 @@ function buildTuikStats(col, data, t) {
         const period = formatPeriod(data.unemployment.period, t);
         col.push(chalk.dim(` ${t.tuikUnemploymentLabel}: %${data.unemployment.value} (${period})`));
     }
+    if (data.gdp) {
+        const period = formatPeriod(data.gdp.period, t);
+        col.push(chalk.dim(` ${t.tuikGdpLabel}: %${data.gdp.value} (${period})`));
+    }
+    if (data.consumerConfidence) {
+        const period = formatPeriod(data.consumerConfidence.period, t);
+        col.push(chalk.dim(` ${t.tuikConsumerConfidenceLabel}: ${data.consumerConfidence.value} (${period})`));
+    }
 }
 
 function buildEconomicNews(col, data, t, colW) {
     col.push(sectionHeader(t.sections.economicNews));
     if (!data) { col.push(errorMessage(t)); return; }
-    data.forEach((n) => {
+    data.slice(0, 8).forEach((n) => {
         const fullTitle = "- " + n.title;
         const maxPerLine = colW - 3;
         if (fullTitle.length > maxPerLine) {
@@ -198,7 +212,7 @@ function buildEconomicNews(col, data, t, colW) {
 function buildPolitics(col, data, t, colW) {
     col.push(sectionHeader(t.sections.politics));
     if (!data) { col.push(errorMessage(t)); return; }
-    data.forEach((n) => {
+    data.slice(0, 6).forEach((n) => {
         const fullTitle = "- " + n.title;
         const maxPerLine = colW - 3;
         if (fullTitle.length > maxPerLine) {
@@ -266,9 +280,8 @@ function buildWeather(col, data, t) {
     for (const w of data) {
         let vis = visibleLength(w.city);
         let cityStr = w.city + ' '.repeat(Math.max(1, 10 - vis));
-        const tempStr = w.temp.padStart(4);
-        const rangeStr = w.range.padStart(6);
-        col.push(chalk.dim(` ${cityStr} ${tempStr} ${rangeStr} ${truncate(w.condition, 30)}`));
+        const rangeStr = w.range.padStart(11);
+        col.push(chalk.dim(` ${cityStr} ${rangeStr} ${truncate(w.condition, 30)}`));
     }
 }
 
@@ -280,4 +293,14 @@ function formatPeriod(dateStr, t) {
         return `${parts[0]} ${monthName}`;
     }
     return dateStr;
+}
+
+function buildMagnificent7(col, data, t) {
+    col.push(sectionHeader(t.sections.magnificent7stocks));
+    if (!data) { col.push(errorMessage(t)); return; }
+    for (const s of data) {
+        const ticker = s.ticker.padEnd(6);
+        const price = (s.price || '-').padEnd(10);
+        col.push(chalk.dim(` ${ticker}${price}${colorizeValue(s.changePercent)}`));
+    }
 }

@@ -1,7 +1,7 @@
 import { scrape } from '../utils/browser.js';
 
 export async function fetch() {
-    const cities = ['İstanbul', 'Ankara', 'İzmir', 'Çanakkale', 'Bursa', 'Antalya', 'Adana', 'Gaziantep', 'Kocaeli', 'Mersin'];
+    const cities = ['İstanbul', 'Ankara', 'İzmir', 'Çanakkale', 'Bursa', 'Antalya', 'Adana'];
 
     const scrapeCity = async (city) => {
         try {
@@ -31,9 +31,8 @@ export async function fetch() {
 
                 return {
                     city: city,
-                    temp: `${data.max}°`,
                     condition: `${emoji} ${data.condition}`,
-                    range: `${data.max}/${data.min}`
+                    range: `${data.max}°C ${data.min}°C`
                 };
             }
         } catch (e) {

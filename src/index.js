@@ -25,7 +25,7 @@ function detectLanguage() {
 program
     .name('trmonitor')
     .description('A powerful CLI tool to monitor Turkiye agenda in real-time.')
-    .version('1.0.3')
+    .version('1.0.4')
     .option('--lang <language>', 'Output language (tr or en)', detectLanguage())
     .option('--log', 'Show application logs')
     .action(async (options) => {

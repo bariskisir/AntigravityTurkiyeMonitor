@@ -11,7 +11,7 @@ export async function fetch() {
         indices.unshift(bistIndex);
     }
 
-    const targets = ['BIST 100', 'Nasdaq', 'S&P 500', 'Dow Jones', 'DAX', 'Nikkei 225', 'FTSE 100'];
+    const targets = ['BIST 100', 'Nasdaq', 'S&P 500', 'Dow Jones', 'DAX'];
     const filtered = [];
 
     for (const t of targets) {
@@ -19,10 +19,10 @@ export async function fetch() {
         if (found) filtered.push(found);
     }
 
-    if (filtered.length < 5) {
+    if (filtered.length < 3) {
         for (const i of indices) {
             if (!filtered.find(f => f.name === i.name)) filtered.push(i);
-            if (filtered.length >= 7) break;
+            if (filtered.length >= 5) break;
         }
     }
 
@@ -30,7 +30,7 @@ export async function fetch() {
         throw new Error('No stock indices data found');
     }
 
-    return filtered.slice(0, 7);
+    return filtered.slice(0, 5);
 }
 
 async function scrapeIndices() {
